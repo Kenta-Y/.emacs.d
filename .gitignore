@@ -2,3 +2,6 @@
 *backup
 *site-lisp
 *auto-save-list
+*inits
+*elpa
+*share

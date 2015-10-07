@@ -1,3 +1,10 @@
+;;; 起動時にPATHを通す
+
+;;UpTeX
+(setenv "PATH"
+        (concat (getenv "PATH") ":/Applications/UpTeX.app/Contents/Resources/texbin"))
+
+
 ;;; 追加分
 
 ;;対応する括弧をハイライト
@@ -33,6 +40,26 @@
 ;;1行ずつスクロールする
 (setq scroll-conservatively 1)
 
+;; Monaco 12pt をデフォルトにする
+(set-face-attribute 'default nil
+                    :family "Monaco"
+                    :height 120)
+;; 日本語をヒラギノ角ゴProNにする
+(set-fontset-font "fontset-default"
+                  'japanese-jisx0208
+                  '("Hiragino Maru Gothic ProN"))
+;; 半角カナをヒラギノ角ゴProNにする
+(set-fontset-font "fontset-default"
+                  'katakana-jisx0201
+                  '("Hiragino Maru Gothic ProN"))
+
+;; yatex_preview
+;;(setq dvi2-command "open -a Preview")
+;;(defvar YaTeX-dvi2-command-ext-alist
+;;  '(("xdvi" . ".dvi")
+;;    ("ghostview\\|gv" . ".ps")
+;;    ("acroread\\|pdf\\|Preview\\|open" . ".pdf"))
+
 ;;ウィンドウの半透明化
 ;;(if window-system
 ;;	(progn
@@ -41,6 +68,8 @@
 
 ;;; 追加ここまで
 
+
+;;; 以下竹村氏提供のものを使用
 
 
 ;; Red Hat Linux default .emacs initialization file
@@ -173,12 +202,40 @@
       (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
 (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
 ;;(setq load-path (cons (expand-file-name "/usr/local/lib/mule/site-lisp/yatex/") load-path))
-(setq load-path (cons (expand-file-name ".emacs.d/site-lisp/yatex/") load-path))
+(setq load-path (cons (expand-file-name "~/.emacs.d/site-lisp/yatex") load-path))
 
 (setq dvi2-command ""
       tex-command "/Applications/UpTeX.app/Contents/Resources/texbin/platex"
-      dviprint-command-format "/Applications/UpTeX.app/Contents/Resources/texbin/dvipdfmx %s"
+	  dviprint-command-format "/Applications/UpTeX.app/Contents/Resources/texbin/dvipdfmx %s"
       YaTeX-kanji-code 4)
+
+(defun -acrobat ()
+   "Call Acrobat Reader with a pdf file made from the tex file of current buffer"
+   (interactive)
+   (let ((filename (concat (file--sans-extension (buffer-name)) ".pdf")))
+         (if (file-exists-p filename) 
+              (call-process "acroread" nil nil nil filename)
+              (message "Cannot file pdf file"))))
+
+(setq yatex-mode-load-hook
+     '(lambda() (YaTeX-define-key "p" 'call-acrobat)))
+
+;;(defvar YaTeX-dvi2-command-ext-alist
+;  '(("[agx]dvi\\|dviout\\|emacsclient" . ".dvi")
+;   ("ghostview\\|gv" . ".ps")
+;   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim\\|evince\\|apvlv" . ".pdf")))
+
+;; Add library path
+;(add-to-list 'load-path "~/.emacs.d/lisp/yatex")
+;; YaTeX mode
+;(setq auto-mode-alist
+;    (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
+;(autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
+;(setq tex-command "platex")
+;(setq dviprint-command-format "dvipdfmx %s")
+;; use Preview.app
+;(setq dvi2-command "open -a Preview")
+;(setq bibtex-command "pbibtex")
 
 ;; YaHtml-mode
 ;(setq auto-mode-alist
