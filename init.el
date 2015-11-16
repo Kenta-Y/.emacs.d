@@ -1,9 +1,13 @@
 ;;; 起動時にPATHを通す
 
 ;;UpTeX
+;(setenv "PATH"
+;		(concat (getenv "PATH") ":/Applications/UpTeX.app/Contents/Resources/texbin:/usr/local/Cellar"))
 (setenv "PATH"
-        (concat (getenv "PATH") ":/Applications/UpTeX.app/Contents/Resources/texbin"))
+		(concat (getenv "PATH") ":/usr/local/Cellar:/Applications/UpTeX.app/Contents/Resources/texbin:"))
 
+(setenv "TMPDIR"
+		(concat (getenv "TMPDIR") ":/private/tmp"))
 
 ;;; 追加分
 
@@ -37,8 +41,10 @@
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
 
-;;1行ずつスクロールする
-(setq scroll-conservatively 1)
+;;ゆっくりマウススクロールする
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse(setq scroll-conservatively 1)
 
 ;; Monaco 12pt をデフォルトにする
 (set-face-attribute 'default nil
@@ -52,6 +58,8 @@
 (set-fontset-font "fontset-default"
                   'katakana-jisx0201
                   '("Hiragino Maru Gothic ProN"))
+
+(setq dviprint-command-format "dvipdfmx %s")
 
 ;; yatex_preview
 ;;(setq dvi2-command "open -a Preview")
