@@ -52,7 +52,11 @@
 ;		(concat (getenv "PATH") ":/Applications/UpTeX.app/Contents/Resources/texbin:/usr/local/Cellar"))
 
 (setenv "PATH"
-		(concat (getenv "PATH") ":/usr/local/Cellar:/usr/local/lib:/Applications/UpTeX.app/Contents/Resources/texbin"))
+		(concat (getenv "PATH") ":/usr/local/Cellar
+								 :/usr/local/lib
+								 :/Applications/UpTeX.app/Contents/Resources/texbin
+								 :/usr/local/Cellar/ghostscript/9.16/bin
+								 :/usr/local/Cellar/ghostscript/9.16/lib"))
 
 (setenv "TMPDIR"
 		(concat (getenv "TMPDIR") ":/private/tmp"))
