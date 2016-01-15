@@ -1,15 +1,127 @@
-;;; 起動時にPATHを通す
+;;
+;;	PATH関連
+;;
+;;=========================================================================
 
-;;UpTeX
+;;
+;; load-path
+;; Mode: Emacs-Lisp ; Coding: utf-8 -*-
+;;-------------------------------------------------------
+
+;; load-pathの追加関数
+(defun add-to-load-path (&rest paths)
+  (let (path)
+    (dolist (path paths paths)
+      (let ((default-directory (expand-file-name (concat user-emacs-directory path))))
+        (add-to-list 'load-path default-directory)
+        (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+            (normal-top-level-add-subdirs-to-load-path))))))
+
+;; load-pathに追加するフォルダ
+;; 2つ以上フォルダを指定する場合の引数 => (add-to-load-path "elisp" "xxx" "xxx")
+(add-to-load-path "elpa")
+
+;;
+;; emacsの拡張リポジトリ関連
+;;-------------------------------------------------------
+
+;;;emacsリポジトリ追加
+(require 'package)
+
+;; 初期化
+(package-initialize)
+
+;; MELPAを追加
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+
+;; MELPA-stableを追加
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+
+;; Marmaladeを追加
+(add-to-list 'package-archives  '("marmalade" . "http://marmalade-repo.org/packages/") t)
+
+;; Orgを追加
+;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+;;
+;; PATH
+;; UpTeX関連含
+;;-------------------------------------------------------
+
 ;(setenv "PATH"
 ;		(concat (getenv "PATH") ":/Applications/UpTeX.app/Contents/Resources/texbin:/usr/local/Cellar"))
+
 (setenv "PATH"
-		(concat (getenv "PATH") ":/usr/local/Cellar:/Applications/UpTeX.app/Contents/Resources/texbin:"))
+		(concat (getenv "PATH") ":/usr/local/Cellar:/usr/local/lib:/Applications/UpTeX.app/Contents/Resources/texbin"))
 
 (setenv "TMPDIR"
 		(concat (getenv "TMPDIR") ":/private/tmp"))
 
-;;; 追加分
+(setenv "BIBINPUTS"
+		(concat (getenv "BIBINPUTS") ":/Users/KentaYamagishi/Documents/tex/bibtex"))
+
+;(shellenv/setenv "PATH" 'bash)
+
+
+
+;;
+;;	el関連
+;;
+;;=========================================================================
+
+;;
+;; tabbar
+;; (install-elisp "http://www.emacswiki.org/emacs/download/tabbar.el")
+;; -------------------------------------------------------
+(require 'tabbar)
+;(tabbar-mode)
+(global-set-key (kbd "M-<right>") 'tabbar-forward-tab)
+(global-set-key (kbd "M-<left>") 'tabbar-backward-tab)
+;; タブ上でマウスホイールを使わない
+(tabbar-mwheel-mode nil)
+;; グループを使わない
+(setq tabbar-buffer-groups-function nil)
+;; 左側のボタンを消す
+(dolist (btn '(tabbar-buffer-home-button
+               tabbar-scroll-left-button
+               tabbar-scroll-right-button))
+  (set btn (cons (cons "" nil)
+                 (cons "" nil))))
+;; 外観変更
+
+ (set-face-attribute ; バー自体の色
+    'tabbar-default nil
+    ;:background "LightSlateBlue"
+    :background "white"
+    ;:family "Inconsolata"
+    :family "white"
+    :height 1.0)
+ (set-face-attribute ; アクティブなタブ
+   'tabbar-selected nil
+    :background "navy"
+    :foreground "white"
+    :weight 'bold
+    :box nil)
+ (set-face-attribute ; 非アクティブなタブ
+   'tabbar-unselected nil
+    ;:background "LightSlateBlue"
+    :background "white"
+    :foreground "white"
+    :box nil)
+
+(require 'tabbar-ruler)
+
+(require 'save-visited-files)
+;;; tramp(remote)ファイルは復元しない
+;(setq save-visited-files-ignore-tramp-files t)
+;(turn-on-save-visited-files-mode)
+
+
+
+;;
+;;	基本設定
+;;
+;;=========================================================================
 
 ;;対応する括弧をハイライト
 (show-paren-mode t)
@@ -69,12 +181,21 @@
 ;;    ("acroread\\|pdf\\|Preview\\|open" . ".pdf"))
 
 ;;ウィンドウの半透明化
-;;(if window-system
-;;	(progn
-;;	  (set-frame-parameter nil 'alpha80)))
+;(if window-system
+;	(progn
+;	  (set-frame-parameter nil 'alpha80)))
 
+;;ステータスバーの色変更
+;(set-face-background 'mode-line "MediumPurple2")
+(set-face-background 'mode-line "LightSlateBlue")
 
 ;;; 追加ここまで
+
+
+
+
+
+
 
 
 ;;; 以下竹村氏提供のものを使用
@@ -109,7 +230,6 @@
  '(transient-mark-mode t))
 (custom-set-faces
  )
-
 
 ;;Color
 (if window-system (progn
