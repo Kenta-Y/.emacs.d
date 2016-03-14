@@ -49,17 +49,13 @@
 ;;-------------------------------------------------------
 
 ;(setenv "PATH"
-;		(concat (getenv "PATH") ":/Applications/UpTeX.app/Contents/Resources/texbin:/usr/local/Cellar"))
+;		(concat (getenv "PATH") ":/Applications/UpTeX.app/Contents/Resources/texbin"))
 
 (setenv "PATH"
-		(concat (getenv "PATH") ":/usr/local/Cellar
-								 :/usr/local/lib
-								 :/Applications/UpTeX.app/Contents/Resources/texbin
-								 :/usr/local/Cellar/ghostscript/9.16/bin
-								 :/usr/local/Cellar/ghostscript/9.16/lib"))
+		(concat (getenv "PATH") ":/usr/local/Cellar:/usr/local/lib:/Applications/UpTeX.app/Contents/Resources/texbin:/usr/local/share/ghostscript/9.18/lib:/usr/local/bun/gs"))
 
-(setenv "TMPDIR"
-		(concat (getenv "TMPDIR") ":/private/tmp"))
+;(setenv "TMPDIR"
+;		(concat (getenv "TMPDIR") ":/private/tmp"))
 
 (setenv "BIBINPUTS"
 		(concat (getenv "BIBINPUTS") ":/Users/KentaYamagishi/Documents/tex/bibtex"))
@@ -73,12 +69,13 @@
 ;;
 ;;=========================================================================
 
+
 ;;
 ;; tabbar
 ;; (install-elisp "http://www.emacswiki.org/emacs/download/tabbar.el")
 ;; -------------------------------------------------------
 (require 'tabbar)
-;(tabbar-mode)
+(tabbar-mode 1)
 (global-set-key (kbd "M-<right>") 'tabbar-forward-tab)
 (global-set-key (kbd "M-<left>") 'tabbar-backward-tab)
 ;; タブ上でマウスホイールを使わない
@@ -93,29 +90,74 @@
                  (cons "" nil))))
 ;; 外観変更
 
+(setq tabbar-separator '(1.2)) ;; タブの長さ
+
+;; 幅設定
+ ; (set-face-attribute
+ ;  'tabbar-separator nil
+ ;  :height 1.1)
+
  (set-face-attribute ; バー自体の色
     'tabbar-default nil
-    ;:background "LightSlateBlue"
-    :background "white"
-    ;:family "Inconsolata"
-    :family "white"
-    :height 1.0)
+    :background "LightSlateBlue"
+    ;:family "Monaco"
+    ;:family "white"
+	:height 1.0
+	)
  (set-face-attribute ; アクティブなタブ
    'tabbar-selected nil
-    :background "navy"
-    :foreground "white"
+    ;:background "purple"
+    :background "LightSlateBlue"
+	;:foreground "white"
+	:foreground "yellow"
     :weight 'bold
-    :box nil)
+	;:box '(:line-width 1 :color "white" :style pressed-button)
+	:box nil
+	 )
  (set-face-attribute ; 非アクティブなタブ
    'tabbar-unselected nil
     ;:background "LightSlateBlue"
-    :background "white"
-    :foreground "white"
-    :box nil)
+	;:background "navy"
+    :background "LightSlateBlue"
+    :foreground "midnight blue"
+	:weight 'bold
+	;:width 1.0
+	;:box '(:line-width 1 :color "white" :style released-button)
+    :box nil
+	)
+ (set-face-attribute ; 変更のあったファイル
+  'tabbar-modified nil
+  :background "LightslateBlue"
+  :foreground "green"
+  :weight 'bold
+  ;:box '(:line-width 1 :color "white" :style released-button)
+  :box nil
+  )
 
-(require 'tabbar-ruler)
+;; タブに表示させるバッファの設定
+(defun my-tabbar-buffer-list ()
+  (delq nil
+    (mapcar #'
+	  (lambda (b)(cond
+        ;; Always include the current buffer.
+        ((eq (current-buffer) b) b)
+        ((buffer-file-name b) b)
+        ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+		;((equal "*scratch*" (buffer-name b)) b) ; *scratch*バッファは表示する
+		((char-equal ?* (aref (buffer-name b) 0)) nil) ; それ以外の * で始まるバッファは表示しない
+        ((buffer-live-p b) b)))
+(buffer-list))))
 
-(require 'save-visited-files)
+
+(setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
+
+;(require 'tabbar-ruler)
+
+;(require 'save-visited-files)
+
+
+
+
 ;;; tramp(remote)ファイルは復元しない
 ;(setq save-visited-files-ignore-tramp-files t)
 ;(turn-on-save-visited-files-mode)
@@ -193,6 +235,11 @@
 ;(set-face-background 'mode-line "MediumPurple2")
 (set-face-background 'mode-line "LightSlateBlue")
 
+;;nyan-cat
+(require 'nyan-mode)
+(nyan-mode)
+(nyan-start-animation)
+
 ;;; 追加ここまで
 
 
@@ -240,7 +287,7 @@
    (set-background-color "Black")
    (set-foreground-color "LightGray")
    (set-cursor-color "Gray")
-   (set-frame-parameter nil 'alpha 80)
+   (set-frame-parameter nil 'alpha 90)
    ))
 
 ;; Are we running XEmacs or Emacs?
