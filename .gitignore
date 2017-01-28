@@ -1,3 +1,4 @@
-autosave/*
-backup/*
-auto-save-list/*
+/autosave/*
+/backup/*
+/auto-save-list/*
+!.gitkeep
