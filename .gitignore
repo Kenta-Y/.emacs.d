@@ -1,7 +1,3 @@
-*autosave
-*backup
-*site-lisp
-*auto-save-list
-*inits
-*elpa
-*share
+autosave/*
+backup/*
+auto-save-list/*

@@ -157,8 +157,24 @@
 
 (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
 
-;(require 'tabbar-ruler)
+										;(require 'tabbar-ruler)
 
+;;
+;; pukiwiki-mode
+;; 
+;; -------------------------------------------------------
+(setq pukiwiki-auto-insert t)
+(autoload 'pukiwiki-edit
+"pukiwiki-mode" "pukwiki-mode." t)
+(autoload 'pukiwiki-index
+"pukiwiki-mode" "pukwiki-mode." t)
+(autoload 'pukiwiki-edit-url
+"pukiwiki-mode" "pukwiki-mode." t)
+(setq
+pukiwiki-site-list
+'(("salty"
+"http://saltyoffice.com/wiki"
+nil euc-jp-dos)))
 
 ;;=========================================================================
 ;;
